@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="sheet.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Instant Booking</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+        body {
+            margin: 12px;
+            padding: 20px;
+            background-image: url("images/thumb-1920-1327709.jpeg");
+            background-color: white;
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: 'Oswald', sans-serif;
+        }
+
+
+        legend {
+            padding-top: 0.5rem;
+            color:white;
+        }
+
+        .ticket {
+            color: white;
+        }
+
+        .validation-message {
+            color: red;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        #result {
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .StripeElement {
+            box-sizing: border-box;
+            height: 40px;
+            padding: 10px 12px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            -webkit-transition: box-shadow 150ms ease;
+            transition: box-shadow 150ms ease;
+        }
+
+        .StripeElement--focus {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .StripeElement--invalid {
+            border-color: #fa755a;
+        }
+
+        .StripeElement--webkit-autofill {
+            background-color: #fefde5 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+   
+
+    <section class="ticket" id="ticket">
+        <div class="ticket">
+            <form id="reservationForm">
+                <fieldset>
+                    <div id="datetime"></div><br>
+
+                    Enter Email:
+                    <input type="text" id="Email" placeholder="Email">
+                    <span id="EmailError" class="validation-message"></span><br><br>
+
+                    Enter Password:
+                    <input type="password" id="Password" placeholder="Password">
+                    <span id="passwordError" class="validation-message"></span><br><br>
+
+                    Going Day:
+                    <input type="date" id="d1" name="date">
+                    <br><br>
+
+                    Return Day:
+                    <input type="date" id="d2" name="date">
+                    <span id="dateError" class="validation-message"></span> <br><br>
+
+                    Number of Tickets:
+                    <input type="number" id="numberticket" min="1" max="10">
+                    <span id="numberticketError" class="validation-message"></span><br><br>
+
+                    Choose the Ticket Class:
+                    <select id="t5" name="ChooseTheTicketClass">
+                        <option value="select">Select</option>
+                        <option value="First class">First Class</option>
+                        <option value="Economy class">Economy Class</option>
+                    </select>
+                    <span id="t5Error" class="validation-message"></span><br><br>
+
+                    Are you sure:
+                    <input type="checkbox" id="checkbox" name="checkbox">
+                    <span id="checkboxError" class="validation-message"></span><br><br>
+
+                    <!-- Hidden input to determine the source -->
+                    <input type="hidden" id="sourcePage" value="Instant Booking">
+                    <p>Total Price: <span id="totalPrice">0</span> USD</p>
+
+                    <!-- Stripe Elements -->
+                    <div id="card-element">
+                        <!-- A Stripe Element will be inserted here. -->
+                    </div>
+                    <div id="card-errors" role="alert"></div><br>
+
+                    <button type="button" id="submit-button">Submit Payment</button>
+                    <button type="reset">Reset</button>
+                </fieldset>
+            </form>
+        </div>
+    </section>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript">
+        // Set your publishable key
+        const stripe = Stripe('your-publishable-key-here');
+        const elements = stripe.elements();
+        const card = elements.create('card');
+        card.mount('#card-element');
+
+        const form = document.getElementById('reservationForm');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (validateForm()) {
+                const { token, error } = await stripe.createToken(card);
+
+                if (error) {
+                    document.getElementById('card-errors').innerText = error.message;
+                } else {
+                    handlePayment(token.id);
+                }
+            }
+        });
+
+        async function handlePayment(token) {
+            const totalPrice = parseFloat(document.getElementById('totalPrice').innerText);
+
+            // Send the token and total price to your server for processing
+            const response = await fetch('/process_payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    token: token,
+                    totalPrice: totalPrice
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Payment successful!');
+                // Optionally, send an email with ticket details here
+                information();
+            } else {
+                alert('Payment failed: ' + result.error);
+            }
+        }
+
+        function validateForm() {
+            var valid = true;
+            var email = document.getElementById('Email').value;
+            var password = document.getElementById('Password').value;
+            var date1 = document.getElementById('d1').value;
+            var date2 = document.getElementById('d2').value;
+            var numberTicket = document.getElementById('numberticket').value;
+            var ticketClass = document.getElementById('t5').value;
+            var checkbox = document.getElementById('checkbox').checked;
+
+            if (!email || !password || !date1 || !date2 || !numberTicket || ticketClass === 'select' || !checkbox || !validateDates()) {
+                valid = false;
+                if (!email) document.getElementById('EmailError').innerText = 'Email is required';
+                if (!password) document.getElementById('passwordError').innerText = 'Password is required';
+                if (!numberTicket) document.getElementById('numberticketError').innerText = 'Number of tickets is required';
+                if (ticketClass === 'select') document.getElementById('t5Error').innerText = 'Ticket class is required';
+                if (!checkbox) document.getElementById('checkboxError').innerText = 'You must agree to proceed';
+            } else {
+                document.getElementById('EmailError').innerText = '';
+                document.getElementById('passwordError').innerText = '';
+                document.getElementById('dateError').innerText = '';
+                document.getElementById('numberticketError').innerText = '';
+                document.getElementById('t5Error').innerText = '';
+                document.getElementById('checkboxError').innerText = '';
+            }
+
+            return valid;
+        }
+
+        function calculateTotalPrice() {
+            var numberTicket = document.getElementById('numberticket').value;
+            var basePrice = getPriceFromURL();
+            var classPrice = getTicketClassPrice();
+            console.log('Base price:', basePrice); // Log base price
+            console.log('Class price:', classPrice); // Log class price
+            if (numberTicket <= 0) {
+                numberTicket = 0;
+            }
+            var totalPrice = (basePrice + classPrice) * numberTicket;
+            console.log('Total price:', totalPrice); // Log total price
+            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+        }
+
+        function getPriceFromURL() {
+            let price = getQueryParam('price');
+            console.log('Price from URL:', price); // Log price from URL
+            return price ? parseFloat(price) : 0;
+        }
+
+        function getTicketClassPrice() {
+            var ticketClass = document.getElementById('t5').value;
+            if (ticketClass === 'First class') {
+                return 100;
+            } else if (ticketClass === 'Economy class') {
+                return 50;
+            } else {
+                return 0;
+            }
+        }
+
+        function validateDates() {
+            var date1 = new Date(document.getElementById('d1').value);
+            var date2 = new Date(document.getElementById('d2').value);
+            var now = new Date();
+            now.setHours(0, 0, 0, 0);
+
+            var valid = true;
+
+            if (date1 < now) {
+                document.getElementById('dateError').innerText = 'Departure day cannot be before today.';
+                valid = false;
+            } else if (date1 > date2) {
+                document.getElementById('dateError').innerText = 'Departure day cannot be after return day.';
+                valid = false;
+            } else {
+                document.getElementById('dateError').innerText = '';
+            }
+
+            return valid;
+        }
+
+        function getQueryParam(param) {
+            let urlParams = new URLSearchParams(window.location.search);
+            let value = urlParams.get(param);
+            console.log('Query param:', param, 'Value:', value); // Log query parameter
+            return value;
+        }
+
+        function updateDateTime() {
+            var dateTimeElement = document.getElementById("datetime");
+            var now = new Date();
+            var dateTimeString = "Current Date and Time: " + now.toLocaleDateString() + " " + now.toLocaleTimeString();
+            dateTimeElement.textContent = dateTimeString;
+        }
+
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        document.getElementById('d1').addEventListener('change', validateDates);
+        document.getElementById('d2').addEventListener('change', validateDates);
+        document.getElementById('numberticket').addEventListener('input', calculateTotalPrice);
+        document.getElementById('t5').addEventListener('change', calculateTotalPrice);
+    </script>
+</body>
+
+</html>

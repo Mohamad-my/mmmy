@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Travel Company</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-custom {
+            background-color: #343a40; /* Dark background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #f8f9fa; /* Light text color for the brand */
+        }
+
+        .navbar-custom .navbar-nav .nav-link {
+            color: #f8f9fa; /* Light text color for nav links */
+            padding: 10px 15px;
+        }
+
+        .navbar-custom .navbar-nav .nav-link:hover,
+        .navbar-custom .navbar-nav .nav-link.active {
+            color: #17a2b8; /* Highlight color */
+            background-color: rgba(23, 162, 184, 0.1); /* Light background on hover */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        .navbar-toggler {
+            border-color: #17a2b8; /* Toggler border color */
+        }
+
+        .navbar-toggler-icon {
+            background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"%3E%3Cpath stroke="%23fff" stroke-width="2" d="M4 7h22M4 15h22M4 23h22" /%3E%3C/svg%3E');
+        }
+
+        .navbar-nav {
+            margin-left: auto; /* Align links to the right */
+        }
+
+        .about-section {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+
+        .about-section h2 {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .about-section p {
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: justify;
+            color: #555;
+        }
+
+        .about-section .mission, .about-section .vision {
+            margin-top: 40px;
+        }
+
+        .team-section {
+            padding: 60px 0;
+            background-color: #e9ecef;
+        }
+
+        .team-section h3 {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .team-member {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .team-member img {
+            width: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        .team-member h4 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .team-member p {
+            font-size: 16px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Travel Company</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link " href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="support.html">Support</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reservations.html">Reservations</a></li>
+                    <li class="nav-item"><a class="nav-link " href="offer-details.html" >Offer Reservations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reviews.html">Review</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#About">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="location.html">Location</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="about-section">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>
+                Welcome to Travel Company, your trusted partner in discovering the world's best travel destinations. 
+                We specialize in offering customized travel experiences tailored to meet the unique needs of each traveler. 
+                Whether you're looking for an adventurous getaway, a relaxing beach vacation, or a luxurious stay at top resorts, we have it all.
+            </p>
+            <p class="mission">
+                <strong>Our Mission:</strong> Our mission is to provide exceptional travel experiences through personalized services, ensuring that every journey becomes a memorable one.
+            </p>
+            <p class="vision">
+                <strong>Our Vision:</strong> To be a global leader in the travel industry, offering top-quality services and building long-lasting relationships with our customers by delivering unparalleled travel solutions.
+            </p>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="container">
+            <h3>Meet Our Team</h3>
+            <div class="row">
+                <div class="col-md-4 team-member">
+                    <img src="images/team1.jpg" alt="Team Member 1">
+                    <h4>John Doe</h4>
+                    <p>CEO & Founder</p>
+                </div>
+                <div class="col-md-4 team-member">
+                    <img src="images/team2.jpg" alt="Team Member 2">
+                    <h4>Jane Smith</h4>
+                    <p>Head of Operations</p>
+                </div>
+                <div class="col-md-4 team-member">
+                    <img src="images/team3.jpg" alt="Team Member 3">
+                    <h4>Emily Johnson</h4>
+                    <p>Customer Relations Manager</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
